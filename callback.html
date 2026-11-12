@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Authorization Callback — ONES Electrical</title>
+<style>
+  body { font-family:'Segoe UI',Arial,sans-serif; background:#0a1f3c; color:#fff; display:flex; align-items:center; justify-content:center; min-height:100vh; margin:0; }
+  .box { background:#fff; color:#1c2b3a; max-width:560px; width:92%; border-radius:14px; padding:36px 32px; box-shadow:0 10px 40px rgba(0,0,0,.4); }
+  h1 { font-size:1.3rem; color:#0a1f3c; margin:0 0 6px; }
+  .ok { color:#1a7f37; font-weight:700; }
+  .err { color:#c62828; font-weight:700; }
+  p { font-size:.95rem; color:#5a6b7f; margin:8px 0 18px; }
+  .codebox { width:100%; padding:14px; border:2px dashed #f5a623; border-radius:8px; font-family:Consolas,monospace; font-size:1.05rem; word-break:break-all; background:#fff8ea; color:#1c2b3a; }
+  .btn { display:inline-block; margin-top:16px; background:#f5a623; color:#1c2b3a; font-weight:700; padding:10px 26px; border-radius:6px; border:none; cursor:pointer; font-size:.95rem; }
+  .copied { color:#1a7f37; font-size:.85rem; margin-left:10px; display:none; }
+  footer { margin-top:22px; font-size:.8rem; color:#9aa7b5; text-align:center; }
+</style>
+</head>
+<body>
+<div class="box">
+  <h1 id="title">TikTok Authorization Callback</h1>
+  <p id="msg">Checking the response...</p>
+  <div id="codewrap" style="display:none">
+    <div class="codebox" id="code"></div>
+    <button class="btn" onclick="copyCode()">Copy authorization code</button>
+    <span class="copied" id="copied">Copied!</span>
+    <p style="margin-top:16px">Send this code back to your assistant (小二) to finish the setup. This is a one-time step — you will not need to do this again.</p>
+  </div>
+  <footer>ONES Electrical CO., LTD. · <a href="index.html" style="color:#f5a623">Home</a></footer>
+</div>
+<script>
+  var p = new URLSearchParams(location.search);
+  var code = p.get('code');
+  var err = p.get('error') || p.get('error_code');
+  if (code) {
+    document.getElementById('msg').innerHTML = '<span class="ok">✔ Authorization successful.</span> Copy the code below:';
+    document.getElementById('code').textContent = code;
+    document.getElementById('codewrap').style.display = 'block';
+    document.getElementById('title').textContent = 'Authorization Successful';
+  } else if (err) {
+    document.getElementById('msg').innerHTML = '<span class="err">✖ Authorization failed:</span> ' + err + (p.get('error_description') ? ' — ' + p.get('error_description') : '');
+    document.getElementById('title').textContent = 'Authorization Failed';
+  } else {
+    document.getElementById('msg').textContent = 'No authorization code found in the URL. Please restart the authorization from the assistant.';
+  }
+  function copyCode() {
+    var t = document.getElementById('code').textContent;
+    if (navigator.clipboard) { navigator.clipboard.writeText(t); }
+    else { var i = document.createElement('input'); i.value = t; document.body.appendChild(i); i.select(); document.execCommand('copy'); document.body.removeChild(i); }
+    document.getElementById('copied').style.display = 'inline';
+  }
+</script>
+</body>
+</html>
